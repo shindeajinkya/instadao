@@ -1,0 +1,89 @@
+@import url("tailwindcss/tailwind.css");
+
+html,
+body {
+  font-family: "Space Grotesk", sans-serif !important;
+  @apply text-black;
+}
+
+div.embed-modal .ant-modal-content {
+  border-radius: 10px;
+}
+
+div.embed-modal .ant-modal-header {
+  border-radius: 10px 10px 0 0;
+}
+
+.active-bottom-border::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90.08deg, #7d8aff 1.96%, #d5a0ff 98.06%);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-2;
+}
+
+/* container in small screens */
+@media (max-width: 768px) {
+  .container {
+    @apply max-w-sm mx-auto px-2;
+  }
+}
+
+.pink-blur {
+  position: fixed;
+  width: 427px;
+  height: 427px;
+  left: -119px;
+  top: 643px;
+
+  /* Pink */
+
+  background: #ffa3e0;
+  filter: blur(500px);
+  z-index: -1;
+}
+
+.yellow-blur {
+  position: fixed;
+  width: 365px;
+  height: 365px;
+  left: 1123px;
+  top: -98px;
+
+  /* Yellow */
+
+  background: #ffe5a3;
+  filter: blur(400px);
+
+  z-index: -1;
+}
+
+@media (max-width: 768px) {
+  .pink-blur {
+    width: 427px;
+    height: 427px;
+    left: -123px;
+    top: 473px;
+  }
+
+  .yellow-blur {
+    width: 365px;
+    height: 365px;
+    left: 41px;
+    top: -53px;
+  }
+}
+
+.card {
+  box-shadow: -10px -10px 20px #d7d2d21a,
+    10px 10px 20px rgba(215, 210, 210, 0.1);
+  @apply p-8;
+}
