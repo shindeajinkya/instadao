@@ -70,7 +70,7 @@ const Dashboard: React.FC = () => {
       // 	.auth()
       // 	.signInWithCustomToken(token.data.token);
 
-      router.push("/rungta");
+      router.push("/create-dao");
     } catch (error) {
       console.error(error);
       toast.error(error.message);
