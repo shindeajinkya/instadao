@@ -1,6 +1,12 @@
-import { ExternalLinkIcon, LockClosedIcon } from "@heroicons/react/solid";
+import {
+  ExternalLinkIcon,
+  LockClosedIcon,
+  PlusIcon,
+} from "@heroicons/react/solid";
+import { Upload } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { FileUpload, useFileUpload } from "use-file-upload";
 import Button from "../components/Button";
 import Select from "../components/Select";
 import { useMoralisData } from "../hooks/useMoralisData";
@@ -13,7 +19,7 @@ declare let window: any;
 interface InputProps {
   label: string;
   disabled?: boolean;
-  value?: string;
+  value?: string | number;
   onChange?: () => void;
   placeholder?: string;
   showENSLink?: boolean;
@@ -74,6 +80,7 @@ interface ENSResponse {
 const Dashboard: React.FC = () => {
   const router = useRouter();
   const { account: selfAddress, isAuthenticated } = useMoralisData();
+  const [file, selectFile] = useFileUpload();
   const [address, setAddress] = useState("");
   const [ens, setEns] = useState<string | null>("");
   const [selectedEns, setSelectedEns] = useState(null);
@@ -89,12 +96,12 @@ const Dashboard: React.FC = () => {
     if (!selfAddress) return;
     const ensLinked = await getAllEnsLinked(selfAddress);
     setEnsList(ensLinked.data.domains);
-    setSelectedEns(ensLinked.data.domains[0].name);
+    setSelectedEns(ensLinked.data.domains[0]);
   };
 
   const getAllURLsLinkedWithENS = async () => {
     if (!selfAddress) return;
-    const { discordURL, twitterURL, URL } = await getTexts(selectedEns);
+    const { discordURL, twitterURL, URL } = await getTexts(selectedEns.name);
     console.log(discordURL, twitterURL, URL);
   };
 
@@ -110,6 +117,8 @@ const Dashboard: React.FC = () => {
     }
   }, [selectedEns]);
 
+  console.log(file);
+
   return (
     <div className="bg-light-yellow min-h-screen">
       <div className="max-w-7xl pt-7 rounded-t-3xl my-0 mx-auto pb-0">
@@ -118,12 +127,14 @@ const Dashboard: React.FC = () => {
           <div className="flex items-center">
             <p className="text-lg mr-4">Select ENS:</p>
             <Select
-              options={ensList.map(({ name }) => ({
+              options={ensList.map(({ name, id }) => ({
                 label: name,
-                key: name,
+                key: id,
               }))}
-              value={selectedEns}
-              onChange={(e) => setSelectedEns(e)}
+              value={selectedEns?.id}
+              onChange={(e) =>
+                setSelectedEns(ensList.find((ens) => ens.id === e))
+              }
             />
           </div>
         </div>
@@ -131,31 +142,57 @@ const Dashboard: React.FC = () => {
           <div className="bg-white p-8 rounded-lg border border-black">
             <p className="text-lg">DAO Details</p>
             <hr className="mt-4 mb-4" />
-            <Input label="Name" />
-            <Input label="URL" disabled showENSLink selectedEns={selectedEns} />
+            <Input
+              label="Name"
+              disabled
+              showENSLink
+              value={selectedEns?.labelName}
+              selectedEns={selectedEns?.name}
+            />
+            <Input
+              label="URL"
+              disabled
+              showENSLink
+              selectedEns={selectedEns?.name}
+            />
             <Input
               label="Twitter"
               disabled
               showENSLink
-              selectedEns={selectedEns}
+              selectedEns={selectedEns?.name}
             />
             <Input
               label="Discord"
               disabled
               showENSLink
-              selectedEns={selectedEns}
+              selectedEns={selectedEns?.name}
             />
             <Input label="Snapshot" />
           </div>
           <div className="bg-white rounded-lg p-8 border border-black">
             <p className="text-lg mb-4">Token Details</p>
             <hr className="mt-4 mb-4" />
-            <div className="flex flex-col">
-              <span>Token Logo</span>
+            <div className="flex flex-col mb-4">
+              <span className="mb-4">Token Logo</span>
+              <div
+                className="cursor-pointer w-16 h-16 border border-black rounded-lg flex items-center justify-center"
+                onClick={() =>
+                  selectFile({ multiple: false, accept: "image/*" }, (f) => {})
+                }
+              >
+                {!file ? (
+                  <PlusIcon width={30} height={30} />
+                ) : (
+                  <img
+                    src={(file as FileUpload).source as any}
+                    className="cursor-pointer w-16 rounded-lg flex items-center justify-center"
+                  />
+                )}
+              </div>
             </div>
             <Input label="Token Symbol" />
-            <Input label="Decimals" />
-            <Input label="Token Supply" />
+            <Input label="Decimals" disabled value={18} />
+            <Input label="Token Supply" disabled value={1000000} />
             <Button className="w-full">Create DAO</Button>
           </div>
         </div>
