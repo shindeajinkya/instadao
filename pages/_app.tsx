@@ -77,9 +77,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
                 <div className="flex-shrink-0 flex items-center">
                   <Link href="/">
                     <div className="inline-flex items-center">
-                      <h1 className="text-2xl ml-2 font-bold font-audiowide m-0 flex items-center">
-                        InstaDAO
-                      </h1>
+                      <Logo />
                     </div>
                   </Link>
                 </div>
