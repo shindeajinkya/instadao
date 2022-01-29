@@ -6,13 +6,13 @@ import {
 } from "@heroicons/react/solid";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
 import PieChart from "../components/PieChart";
 import { getEllipsisTxt } from "../helpers/formatters";
 import { useMoralisData } from "../hooks/useMoralisData";
-import { getDAODetails } from "../utils/crypto";
+import { getDAODetails, getTokenTransferDetails } from "../utils/crypto";
 import { createGroup } from "../utils/firebaseQueries";
 import { DAOMetadata, Input } from "./create-dao";
 import copy from "copy-to-clipboard";
@@ -63,7 +63,21 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
   const { account: selfAddress, isAuthenticated } = useMoralisData();
   const [address, setAddress] = useState("");
   const [ens, setEns] = useState<string | null>("");
+  const [tokenTranfers, setTokenTransfers] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const fetchTokenTransferDetails = async () => {
+    if (!selfAddress) return;
+    const tokenTransferDetails = await getTokenTransferDetails(tokenaddress);
+    console.log("called");
+    console.log({ tokenTransferDetails });
+  };
+
+  useEffect(() => {
+    if (!!tokenaddress?.length) {
+      fetchTokenTransferDetails();
+    }
+  }, [tokenaddress]);
 
   return (
     <div className="bg-light-yellow min-h-screen">

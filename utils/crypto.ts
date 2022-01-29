@@ -350,3 +350,38 @@ export const getDAODetails = async (name: string) => {
 
   return res.data.data.tokenEntities[0];
 };
+
+export const getTokenTransferDetails = async (tokenaddress: string) => {
+  const headers = {
+    "content-type": "application/json",
+  };
+  const ensGraphURL =
+    "https://api.thegraph.com/subgraphs/name/anoushk1234/insta-dao";
+  const graphqlQuery = {
+    operationName: "getTokenTransferDetails",
+    // variables: {},
+    query: `query getTokenTransferDetails {
+           tokenTransferEntities(where: {tokenaddress: "0x9f2ad68e314fd9cd86e929573d4f2e1f54be8d64"}) {
+              id
+              count
+              tokenaddress
+              to
+              amt
+            }
+        }
+    `,
+  };
+
+  const res = await axios({
+    url: ensGraphURL,
+    method: "POST",
+    data: graphqlQuery,
+    headers,
+  });
+
+  if (!!res.data?.errors?.length) {
+    throw new Error("Error fetching ens domains");
+  }
+
+  return res.data.data.tokenTransferEntities;
+};
