@@ -4,6 +4,7 @@ import {
   ArrowSmRightIcon,
   ArrowSmUpIcon,
 } from "@heroicons/react/solid";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -11,8 +12,10 @@ import Button from "../components/Button";
 import PieChart from "../components/PieChart";
 import { getEllipsisTxt } from "../helpers/formatters";
 import { useMoralisData } from "../hooks/useMoralisData";
+import { getDAODetails } from "../utils/crypto";
 import { createGroup } from "../utils/firebaseQueries";
-import { Input } from "./create-dao";
+import { DAOMetadata, Input } from "./create-dao";
+import copy from "copy-to-clipboard";
 
 // import { createGroup } from "../utils/moralis-db";
 
@@ -21,6 +24,22 @@ declare let window: any;
 interface LinkProps {
   href: string;
   label: string;
+}
+
+export interface DaoData {
+  id: string;
+  count: string;
+  tokenaddress: string;
+  creator: string;
+  name: string;
+  ensName: string;
+  metadata: string;
+  symbol: string;
+  totalSupply: string;
+}
+
+export interface DaoDetailsProps {
+  daoData: DaoData;
 }
 
 export const Link: React.FC<LinkProps> = ({ href, label }) => {
@@ -34,52 +53,56 @@ export const Link: React.FC<LinkProps> = ({ href, label }) => {
   );
 };
 
-const DAODetail: React.FC = () => {
+const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
+  if (!daoData) {
+    return <>Not Found</>;
+  }
+  const { name, symbol, tokenaddress, totalSupply, metadata } = daoData;
+  const metadataObject = !!metadata.length ? JSON.parse(metadata) : null;
   const router = useRouter();
-  const { account: selfAddress } = useMoralisData();
+  const { account: selfAddress, isAuthenticated } = useMoralisData();
   const [address, setAddress] = useState("");
   const [ens, setEns] = useState<string | null>("");
   const [loading, setLoading] = useState(false);
-  const handleAddressChange = async (address: string, ens: string) => {
-    if (!address) {
-      return;
-    }
-    console.log(address, ens);
-
-    setEns(ens ?? null);
-    setAddress(address);
-  };
 
   return (
     <div className="bg-light-yellow min-h-screen">
       <div className="max-w-7xl pt-7 rounded-t-3xl my-0 mx-auto pb-0">
         <div className="flex justify-between font-audiowide py-6 px-4 rounded-md border-black border items-center bg-white">
           <div className="flex">
-            <h1 className="text-2xl mr-4">Rungta</h1>
-            <div className="flex items-center ">
-              <a
-                href={`https://instadao.xyz/rungta`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-l-lg bg-gray-100"
-              >
-                instadao.xyz/rungta
-              </a>
+            <h1 className="text-2xl mr-4">{name}</h1>
+            <div
+              className="flex items-center cursor-pointer"
+              onClick={() => {
+                copy(`https://instadao.org/${name}`);
+              }}
+            >
+              <span className="p-2 rounded-l-lg bg-gray-100">
+                instadao.org/{name}
+              </span>
               <div className="bg-gray-200 p-2 rounded-r-lg">
                 <DuplicateIcon width={20} height={20} />
               </div>
             </div>
           </div>
           <div className="flex">
-            <Link href={`https://instadao.xyz/rungta`} label="Snapshot" />
-            <Link href={`https://instadao.xyz/rungta`} label="Twitter" />
-            <Link href={`https://instadao.xyz/rungta`} label="Discord" />
-            <Link href={`https://instadao.xyz/rungta`} label="pratyush.wtf" />
+            {!!metadataObject?.snapshotURL?.length && (
+              <Link href={`https://instadao.xyz/rungta`} label="Snapshot" />
+            )}
+            {!!metadataObject?.twitterURL?.length && (
+              <Link href={`https://instadao.xyz/rungta`} label="Twitter" />
+            )}
+            {!!metadataObject?.discordURL?.length && (
+              <Link href={`https://instadao.xyz/rungta`} label="Discord" />
+            )}
+            {!!metadataObject?.websiteURL?.length && (
+              <Link href={`https://instadao.xyz/rungta`} label="pratyush.wtf" />
+            )}
           </div>
         </div>
         <div className="grid grid-cols-2 font-audiowide gap-4 mt-4">
           <div className="bg-white p-8 rounded-lg border border-black">
-            <p className="text-lg">Token Details</p>
+            <p className="text-lg">Token Distribution</p>
             <hr className="mt-4 mb-4" />
             <div>
               <PieChart width={500} height={500} />
@@ -90,14 +113,12 @@ const DAODetail: React.FC = () => {
             <hr className="mt-4 mb-4" />
             <div className="flex justify-between">
               <p className="text-lg">Token Name</p>
-              <p>$Rungta</p>
+              <p>{symbol}</p>
             </div>
             <hr className="mt-4 mb-4" />
             <div className="flex justify-between">
               <p className="text-lg">Address</p>
-              <p>
-                {getEllipsisTxt("0xcf193782f2ebc069ae05ec0ef955e4b042d000dd")}
-              </p>
+              <p>{getEllipsisTxt(tokenaddress)}</p>
             </div>
             <hr className="mt-4 mb-4" />
             <div className="flex justify-between">
@@ -107,7 +128,7 @@ const DAODetail: React.FC = () => {
             <hr className="mt-4 mb-4" />
             <div className="flex justify-between">
               <p className="text-lg">token Supply</p>
-              <p>1,000,000</p>
+              <p>{totalSupply}</p>
             </div>
             <hr className="mt-4 mb-4" />
             <div className="flex justify-between">
@@ -133,6 +154,17 @@ const DAODetail: React.FC = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { id } = ctx.params;
+  const daoData = await getDAODetails(id as string);
+
+  return {
+    props: {
+      daoData: daoData ?? null,
+    },
+  };
 };
 
 export default DAODetail;

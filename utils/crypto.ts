@@ -1,5 +1,7 @@
 import axios from "axios";
 import { ethers } from "ethers";
+import { create, urlSource } from "ipfs-http-client";
+import DaoFactory from "../contract/DaoFactory.json";
 
 declare let window: any;
 
@@ -237,4 +239,114 @@ export const getAllEnsLinked = async (address: string) => {
   }
 
   return res.data;
+};
+
+export const ipfs = create({
+  host: "ipfs.infura.io",
+  port: 5001,
+  protocol: "https",
+});
+
+export const contract = () => {
+  const { ethereum } = window;
+  if (ethereum) {
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    const contractReader = new ethers.Contract(
+      "0x2bBF7B77585af7e3F2a0542944e49B92186D0c29",
+      DaoFactory,
+      signer
+    );
+    return contractReader;
+  }
+
+  return null;
+};
+
+export const uploadImageToIPFS = async (fileSource: string) => {
+  try {
+    const { cid } = await ipfs.add(urlSource(fileSource) as any);
+
+    return `https://ipfs.io/ipfs/${cid.toString()}`;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getDAOForENS = async (name: string) => {
+  const headers = {
+    "content-type": "application/json",
+  };
+  const ensGraphURL =
+    "https://api.thegraph.com/subgraphs/name/anoushk1234/insta-dao";
+  const graphqlQuery = {
+    operationName: "getDAO",
+    // variables: {},
+    query: `query getDAO {
+          tokenEntities(where:{ensName: "${name}"}) {
+              id
+              count
+              tokenaddress
+              creator,
+              name,
+              ensName,
+              metadata,
+              symbol,
+              totalSupply 
+            }
+        }
+    `,
+  };
+
+  const res = await axios({
+    url: ensGraphURL,
+    method: "POST",
+    data: graphqlQuery,
+    headers,
+  });
+
+  if (!!res.data?.errors?.length) {
+    throw new Error("Error fetching ens domains");
+  }
+
+  return res.data;
+};
+
+export const getDAODetails = async (name: string) => {
+  const headers = {
+    "content-type": "application/json",
+  };
+  const ensGraphURL =
+    "https://api.thegraph.com/subgraphs/name/anoushk1234/insta-dao";
+  const graphqlQuery = {
+    operationName: "getDAO",
+    // variables: {},
+    query: `query getDAO {
+          tokenEntities(where:{name: "${name}"}) {
+              id
+              count
+              tokenaddress
+              creator,
+              name,
+              ensName,
+              metadata,
+              symbol,
+              totalSupply 
+            }
+        }
+    `,
+  };
+
+  const res = await axios({
+    url: ensGraphURL,
+    method: "POST",
+    data: graphqlQuery,
+    headers,
+  });
+
+  if (!!res.data?.errors?.length) {
+    throw new Error("Error fetching ens domains");
+  }
+
+  return res.data.data.tokenEntities[0];
 };

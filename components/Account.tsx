@@ -55,12 +55,6 @@ function Account() {
     }
   };
 
-  useEffect(() => {
-    if (!isAuthenticated && !loading) {
-      router.push("/");
-    }
-  }, [isAuthenticated, loading, router]);
-
   if (loading) {
     return (
       <div className=" bg-gray-200 rounded-lg px-2 py-3 w-48 flex justify-center">
