@@ -253,7 +253,7 @@ export const contract = () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const contractReader = new ethers.Contract(
-      "0xe92FB39D0f3c83800232b331A9f7693F36F86C1C",
+      "0x2916d25181811929e99a3af12d7f1f2ce5a48de1",
       DaoFactory,
       signer
     );
