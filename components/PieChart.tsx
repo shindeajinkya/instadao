@@ -62,7 +62,6 @@ export default function PieChart({
   >(null);
 
   if (width < 10) return null;
-  console.log(letterFrequency);
 
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
@@ -98,7 +97,7 @@ export default function PieChart({
               animate={animate}
               getKey={({ data: { letter } }) => letter}
               onClickDatum={
-                ({ data: { letter } }) => console.log("hello")
+                ({ data: { letter } }) => {}
                 // animate &&
                 // setSelectedAlphabetLetter(
                 //   selectedAlphabetLetter && selectedAlphabetLetter === letter ? null : letter,

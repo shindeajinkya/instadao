@@ -36,6 +36,7 @@ export interface DaoData {
   metadata: string;
   symbol: string;
   totalSupply: string;
+  decimals: string;
 }
 
 export interface DaoDetailsProps {
@@ -53,31 +54,61 @@ export const Link: React.FC<LinkProps> = ({ href, label }) => {
   );
 };
 
+const calculateBalance = (amount: number, decimals: number) =>
+  amount / 10 ** decimals;
+
 const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
   if (!daoData) {
     return <>Not Found</>;
   }
-  const { name, symbol, tokenaddress, totalSupply, metadata } = daoData;
+  const { name, symbol, tokenaddress, totalSupply, metadata, decimals } =
+    daoData;
   const metadataObject = !!metadata.length ? JSON.parse(metadata) : null;
   const router = useRouter();
   const { account: selfAddress, isAuthenticated } = useMoralisData();
   const [address, setAddress] = useState("");
   const [ens, setEns] = useState<string | null>("");
   const [tokenTranfers, setTokenTransfers] = useState([]);
+  const [balanceMapping, setBalanceMapping] = useState<Record<string, number>>(
+    {}
+  );
   const [loading, setLoading] = useState(false);
 
   const fetchTokenTransferDetails = async () => {
-    if (!selfAddress) return;
     const tokenTransferDetails = await getTokenTransferDetails(tokenaddress);
-    console.log("called");
     console.log({ tokenTransferDetails });
+    setTokenTransfers(tokenTransferDetails);
+  };
+
+  const balanceMapper = () => {
+    if (!selfAddress || !tokenTranfers.length) return;
+    const addressToBalance = tokenTranfers.reduce((final, curr) => {
+      const { to, amt } = curr;
+      if (!!final[to]) {
+        final[to] += Number(amt);
+      } else {
+        final = {
+          ...final,
+          [to]: Number(amt),
+        };
+      }
+
+      return final;
+    }, {});
+    setBalanceMapping(addressToBalance);
   };
 
   useEffect(() => {
     if (!!tokenaddress?.length) {
       fetchTokenTransferDetails();
     }
-  }, [tokenaddress]);
+  }, [daoData]);
+
+  useEffect(() => {
+    if (!!tokenTranfers.length) {
+      balanceMapper();
+    }
+  }, [tokenTranfers]);
 
   return (
     <div className="bg-light-yellow min-h-screen">
@@ -152,17 +183,22 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
             <Button className="w-full py-5 mt-8">
               Buy tokens <ArrowSmRightIcon width={24} height={24} />
             </Button>
-            <div className="border border-black bg-gray-100 mt-3 py-3 px-4 rounded-md">
-              <div className="flex justify-between items-center">
-                <p className="text-lg">Your balance</p>
-                <p>500 $Rungta</p>
+            {isAuthenticated && (
+              <div className="border border-black bg-gray-100 mt-3 py-3 px-4 rounded-md">
+                <div className="flex justify-between items-center">
+                  <p className="text-lg">Your balance</p>
+                  <p>{`${calculateBalance(
+                    balanceMapping[selfAddress],
+                    Number(decimals)
+                  )} ${symbol}`}</p>
+                </div>
+                <hr className="mt-2 mb-2" />
+                <div className="flex justify-between items-center">
+                  <p className="text-lg">Your Own</p>
+                  <p>5.022 %</p>
+                </div>
               </div>
-              <hr className="mt-2 mb-2" />
-              <div className="flex justify-between items-center">
-                <p className="text-lg">Your Own</p>
-                <p>5.022 %</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

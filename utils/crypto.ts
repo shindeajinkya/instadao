@@ -287,12 +287,13 @@ export const getDAOForENS = async (name: string) => {
               id
               count
               tokenaddress
-              creator,
-              name,
-              ensName,
-              metadata,
-              symbol,
+              creator
+              name
+              ensName
+              metadata
+              symbol
               totalSupply 
+              decimals
             }
         }
     `,
@@ -326,12 +327,13 @@ export const getDAODetails = async (name: string) => {
               id
               count
               tokenaddress
-              creator,
-              name,
-              ensName,
-              metadata,
-              symbol,
+              creator
+              name
+              ensName
+              metadata
+              symbol
               totalSupply 
+              decimals
             }
         }
     `,
@@ -361,7 +363,7 @@ export const getTokenTransferDetails = async (tokenaddress: string) => {
     operationName: "getTokenTransferDetails",
     // variables: {},
     query: `query getTokenTransferDetails {
-           tokenTransferEntities(where: {tokenaddress: "0x9f2ad68e314fd9cd86e929573d4f2e1f54be8d64"}) {
+           tokenTransferEntities(where: {tokenaddress: "${tokenaddress}"}) {
               id
               count
               tokenaddress
