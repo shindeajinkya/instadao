@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/solid";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
 import PieChart from "../components/PieChart";
@@ -16,6 +16,7 @@ import { getDAODetails, getTokenTransferDetails } from "../utils/crypto";
 import { createGroup } from "../utils/firebaseQueries";
 import { DAOMetadata, Input } from "./create-dao";
 import copy from "copy-to-clipboard";
+import { useTooltip } from "@visx/tooltip";
 
 // import { createGroup } from "../utils/moralis-db";
 
@@ -54,7 +55,7 @@ export const Link: React.FC<LinkProps> = ({ href, label }) => {
   );
 };
 
-const calculateBalance = (amount: number, decimals: number) =>
+const formatBalance = (amount: number, decimals: number) =>
   amount / 10 ** decimals;
 
 const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
@@ -72,29 +73,43 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
   const [balanceMapping, setBalanceMapping] = useState<Record<string, number>>(
     {}
   );
+  const [remainingSupply, setRemainingSupply] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [holdings, setHoldings] = useState([]);
 
   const fetchTokenTransferDetails = async () => {
     const tokenTransferDetails = await getTokenTransferDetails(tokenaddress);
-    console.log({ tokenTransferDetails });
     setTokenTransfers(tokenTransferDetails);
   };
 
   const balanceMapper = () => {
     if (!selfAddress || !tokenTranfers.length) return;
+    let remainingSupply = Number(totalSupply) * 10 ** 18;
+    let holdings = [];
     const addressToBalance = tokenTranfers.reduce((final, curr) => {
       const { to, amt } = curr;
       if (!!final[to]) {
         final[to] += Number(amt);
+        remainingSupply -= Number(amt);
       } else {
         final = {
           ...final,
           [to]: Number(amt),
         };
+        remainingSupply -= Number(amt);
       }
+      setRemainingSupply(formatBalance(remainingSupply, Number(decimals)));
 
       return final;
     }, {});
+
+    holdings = Object.keys(addressToBalance).map((address) => ({
+      address,
+      balance: formatBalance(addressToBalance[address], Number(decimals)),
+    }));
+
+    setHoldings(holdings);
+    // console.log();
     setBalanceMapping(addressToBalance);
   };
 
@@ -105,7 +120,7 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
   }, [daoData]);
 
   useEffect(() => {
-    if (!!tokenTranfers.length) {
+    if (!!tokenTranfers?.length) {
       balanceMapper();
     }
   }, [tokenTranfers]);
@@ -150,7 +165,17 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
             <p className="text-lg">Token Distribution</p>
             <hr className="mt-4 mb-4" />
             <div>
-              <PieChart width={500} height={500} />
+              <PieChart
+                width={500}
+                height={500}
+                data={[
+                  ...holdings,
+                  {
+                    address: "not yet minted",
+                    balance: remainingSupply,
+                  },
+                ]}
+              />
             </div>
           </div>
           <div className="bg-white rounded-lg p-8 border border-black">
@@ -187,7 +212,7 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
               <div className="border border-black bg-gray-100 mt-3 py-3 px-4 rounded-md">
                 <div className="flex justify-between items-center">
                   <p className="text-lg">Your balance</p>
-                  <p>{`${calculateBalance(
+                  <p>{`${formatBalance(
                     balanceMapping[selfAddress],
                     Number(decimals)
                   )} ${symbol}`}</p>
@@ -195,7 +220,14 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
                 <hr className="mt-2 mb-2" />
                 <div className="flex justify-between items-center">
                   <p className="text-lg">Your Own</p>
-                  <p>5.022 %</p>
+                  <p>{`${
+                    (formatBalance(
+                      balanceMapping[selfAddress],
+                      Number(decimals)
+                    ) /
+                      Number(totalSupply)) *
+                    100
+                  } %`}</p>
                 </div>
               </div>
             )}

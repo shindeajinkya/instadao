@@ -253,7 +253,7 @@ export const contract = () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const contractReader = new ethers.Contract(
-      "0x2bBF7B77585af7e3F2a0542944e49B92186D0c29",
+      "0xe92FB39D0f3c83800232b331A9f7693F36F86C1C",
       DaoFactory,
       signer
     );
@@ -370,6 +370,14 @@ export const getTokenTransferDetails = async (tokenaddress: string) => {
               to
               amt
             }
+            manualTransferEntities(where: {tokenaddress: "${tokenaddress}"}){
+              id
+              count
+              from
+              to
+              tokenaddress
+              amt
+            }
         }
     `,
   };
@@ -385,5 +393,8 @@ export const getTokenTransferDetails = async (tokenaddress: string) => {
     throw new Error("Error fetching ens domains");
   }
 
-  return res.data.data.tokenTransferEntities;
+  return [
+    ...res.data.data.tokenTransferEntities,
+    ...res.data.data.manualTransferEntities,
+  ];
 };

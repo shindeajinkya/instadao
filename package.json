@@ -19,6 +19,7 @@
 		"@visx/responsive": "^2.8.0",
 		"@visx/scale": "^2.2.2",
 		"@visx/shape": "^2.4.0",
+		"@visx/tooltip": "^2.8.0",
 		"@walletconnect/web3-provider": "^1.6.6",
 		"antd": "^4.17.3",
 		"axios": "^0.24.0",
