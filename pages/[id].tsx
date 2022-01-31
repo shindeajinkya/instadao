@@ -12,7 +12,11 @@ import Button from "../components/Button";
 import PieChart from "../components/PieChart";
 import { getEllipsisTxt } from "../helpers/formatters";
 import { useMoralisData } from "../hooks/useMoralisData";
-import { getDAODetails, getTokenTransferDetails } from "../utils/crypto";
+import {
+  getAllEnsLinked,
+  getDAODetails,
+  getTokenTransferDetails,
+} from "../utils/crypto";
 import { createGroup } from "../utils/firebaseQueries";
 import { DAOMetadata, Input } from "./create-dao";
 import copy from "copy-to-clipboard";
@@ -90,12 +94,15 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
       const { to, amt } = curr;
       if (!!final[to]) {
         final[to] += Number(amt);
-        remainingSupply -= Number(amt);
       } else {
         final = {
           ...final,
           [to]: Number(amt),
         };
+      }
+      if (curr?.from) {
+        final[curr.from] -= Number(amt);
+      } else {
         remainingSupply -= Number(amt);
       }
       setRemainingSupply(formatBalance(remainingSupply, Number(decimals)));
@@ -193,7 +200,8 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
             <hr className="mt-4 mb-4" />
             <div className="flex justify-between">
               <p className="text-lg">Volume</p>
-              <p>Ξ11,613 ($29,407,127)</p>
+              {/* <p>Ξ11,613 ($29,407,127)</p> */}
+              <p>Add Token on Uniswap</p>
             </div>
             <hr className="mt-4 mb-4" />
             <div className="flex justify-between">
@@ -203,11 +211,19 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
             <hr className="mt-4 mb-4" />
             <div className="flex justify-between">
               <p className="text-lg">Token Price</p>
-              <p>0.005 Ξ ($29)</p>
+              {/* <p>0.005 Ξ ($29)</p> */}
+              <p>Add Token on Uniswap</p>
             </div>
-            <Button className="w-full py-5 mt-8">
+            <a
+              href={`
+                https://app.uniswap.org/#/swap?exactField=output&outputCurrency=${tokenaddress}
+              `}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center bg-black text-white text-xl rounded-md w-full py-5 mt-8"
+            >
               Buy tokens <ArrowSmRightIcon width={24} height={24} />
-            </Button>
+            </a>
             {isAuthenticated && (
               <div className="border border-black bg-gray-100 mt-3 py-3 px-4 rounded-md">
                 <div className="flex justify-between items-center">
