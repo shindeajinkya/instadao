@@ -283,7 +283,7 @@ export const getDAOForENS = async (name: string) => {
     operationName: "getDAO",
     // variables: {},
     query: `query getDAO {
-          tokenEntities(where:{ensName: "${name}"}) {
+          tokenEntities(where:{ensName: "${name.toLowerCase()}"}) {
               id
               count
               tokenaddress
