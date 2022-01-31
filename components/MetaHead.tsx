@@ -6,10 +6,10 @@ interface MetaHeadProps {
   url?: string;
 }
 const MetaHead: React.FC<MetaHeadProps> = ({ title, description, url }) => {
-  title = title || "Get your audience support with crypto!";
-  description =
-    description ||
-    "With BuyMeACryptoCoffee your audience can support you with cryptocurrency";
+  title = title || "Setup Your DAO instantly with InstaDAO";
+  // description =
+  //   description ||
+  //   "With BuyMeACryptoCoffee your audience can support you with cryptocurrency";
   url = url || "https://www.instadao.org/";
   return (
     <Head>
@@ -33,7 +33,7 @@ const MetaHead: React.FC<MetaHeadProps> = ({ title, description, url }) => {
       <meta name="twitter:description" content={description} />
       <meta
         name="twitter:image"
-        content="https://www.buymeacryptocoffee.xyz/meta-background.png"
+        content="https://www.instadao.org/meta-background.png"
       />
       <meta name="twitter:url" content={url} />
       <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon.png" />
