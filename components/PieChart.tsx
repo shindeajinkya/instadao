@@ -72,6 +72,7 @@ export default function PieChart({
   animate = true,
 }: PieProps) {
   if (width < 10) return null;
+  console.log(data);
 
   const {
     hideTooltip,

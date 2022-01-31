@@ -87,7 +87,7 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
   };
 
   const balanceMapper = () => {
-    if (!selfAddress || !tokenTranfers.length) return;
+    if (!tokenTranfers.length) return;
     let remainingSupply = Number(totalSupply) * 10 ** 18;
     let holdings = [];
     const addressToBalance = tokenTranfers.reduce((final, curr) => {
