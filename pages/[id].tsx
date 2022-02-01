@@ -22,15 +22,11 @@ import { DAOMetadata, Input } from "./create-dao";
 import copy from "copy-to-clipboard";
 import { useTooltip } from "@visx/tooltip";
 import ParentSize from "@visx/responsive/lib/components/ParentSize";
+import LinksMenuDropdown, { Link as LinkProps } from "../components/Menu";
 
 // import { createGroup } from "../utils/moralis-db";
 
 declare let window: any;
-
-interface LinkProps {
-  href: string;
-  label: string;
-}
 
 export interface DaoData {
   id: string;
@@ -133,6 +129,33 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
     }
   }, [tokenTranfers]);
 
+  const getLinks = () => {
+    let links = [];
+    !!metadataObject?.snapshotURL?.length &&
+      links.push({
+        href: metadataObject.snapshotURL,
+        label: "Rungta",
+      });
+    !!metadataObject?.twitterURL?.length &&
+      links.push({
+        href: metadataObject.twitterURL,
+        label: "Twitter",
+      });
+    !!metadataObject?.discordURL?.length &&
+      links.push({
+        href: metadataObject.discordURL,
+        label: "Discord",
+      });
+    !!metadataObject?.websiteURL?.length &&
+      links.push({
+        href: metadataObject.websiteURL,
+        label: metadataObject.websiteURL,
+      });
+    return links;
+  };
+
+  const links = getLinks();
+
   return (
     <div className="bg-light-yellow min-h-screen">
       <div className="max-w-7xl pt-7 sm:px-8 rounded-t-3xl my-0 mx-auto pb-0">
@@ -153,19 +176,13 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
               </div>
             </div>
           </div>
-          <div className="flex">
-            {!!metadataObject?.snapshotURL?.length && (
-              <Link href={`https://instadao.xyz/rungta`} label="Snapshot" />
-            )}
-            {!!metadataObject?.twitterURL?.length && (
-              <Link href={`https://instadao.xyz/rungta`} label="Twitter" />
-            )}
-            {!!metadataObject?.discordURL?.length && (
-              <Link href={`https://instadao.xyz/rungta`} label="Discord" />
-            )}
-            {!!metadataObject?.websiteURL?.length && (
-              <Link href={`https://instadao.xyz/rungta`} label="pratyush.wtf" />
-            )}
+          <div className="flex xs:hidden">
+            {links?.map((link) => (
+              <Link href={link.href} label={link.label} />
+            ))}
+          </div>
+          <div className="hidden xs:block">
+            {!!links.length && <LinksMenuDropdown links={links} />}
           </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-1 font-audiowide gap-4 mt-4">

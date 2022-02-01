@@ -237,7 +237,7 @@ const Dashboard: React.FC = () => {
             />
           </div>
         </div>
-        {false ? (
+        {!!availableDAO?.length ? (
           <div className="flex flex-col text-2xl justify-center font-audiowide items-center w-full h-full bg-white mt-4 border border-black rounded-md pt-6 pb-16 px-8">
             <Image src={availableDAOimage} />
             <span className="text-center mx-40">
