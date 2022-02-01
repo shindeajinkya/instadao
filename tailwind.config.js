@@ -17,6 +17,7 @@ module.exports = {
       },
       height: {
         154: "38rem",
+        "500px": "500px",
       },
       colors: {
         transparent: "transparent",

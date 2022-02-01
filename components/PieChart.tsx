@@ -72,7 +72,6 @@ export default function PieChart({
   animate = true,
 }: PieProps) {
   if (width < 10) return null;
-  console.log(data);
 
   const {
     hideTooltip,
@@ -88,7 +87,6 @@ export default function PieChart({
   const radius = Math.min(innerWidth, innerHeight) / 2;
   const centerY = innerHeight / 2;
   const centerX = innerWidth / 2;
-  const donutThickness = 50;
 
   const handleTooltipShow = useCallback(
     (e: React.MouseEvent<SVGPathElement, MouseEvent>, d) => {
@@ -116,7 +114,7 @@ export default function PieChart({
             data={data}
             pieValue={(d) => d.balance}
             pieSortValues={() => -1}
-            outerRadius={radius - donutThickness * 1.3}
+            outerRadius={radius - 40}
           >
             {(pie) => (
               <AnimatedPie

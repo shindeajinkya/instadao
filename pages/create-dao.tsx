@@ -220,11 +220,11 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="bg-light-yellow min-h-screen">
-      <div className="max-w-7xl pt-7 rounded-t-3xl my-0 mx-auto pb-0">
+      <div className="max-w-7xl pt-7 sm:px-8 rounded-t-3xl my-0 mx-auto pb-0">
         <div className="flex justify-between font-audiowide py-6 px-4 rounded-md border-black border items-center bg-white">
-          <h1 className="text-2xl">Project Details</h1>
+          <h1 className="text-2xl xs:text-xl">Project Details</h1>
           <div className="flex items-center">
-            <p className="text-lg mr-4">Select ENS:</p>
+            <p className="text-md mr-4">Select ENS:</p>
             <Select
               options={ensList.map(({ name, id }) => ({
                 label: name,
@@ -237,7 +237,7 @@ const Dashboard: React.FC = () => {
             />
           </div>
         </div>
-        {!!availableDAO.length ? (
+        {false ? (
           <div className="flex flex-col text-2xl justify-center font-audiowide items-center w-full h-full bg-white mt-4 border border-black rounded-md pt-6 pb-16 px-8">
             <Image src={availableDAOimage} />
             <span className="text-center mx-40">
@@ -255,7 +255,7 @@ const Dashboard: React.FC = () => {
             </a>
           </div>
         ) : (
-          <div className="grid grid-cols-2 font-audiowide gap-4 mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-1 font-audiowide gap-4 mt-4">
             <div className="bg-white p-8 rounded-lg border border-black">
               <p className="text-lg">DAO Details</p>
               <hr className="mt-4 mb-4" />

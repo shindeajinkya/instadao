@@ -21,6 +21,7 @@ import { createGroup } from "../utils/firebaseQueries";
 import { DAOMetadata, Input } from "./create-dao";
 import copy from "copy-to-clipboard";
 import { useTooltip } from "@visx/tooltip";
+import ParentSize from "@visx/responsive/lib/components/ParentSize";
 
 // import { createGroup } from "../utils/moralis-db";
 
@@ -134,20 +135,20 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
 
   return (
     <div className="bg-light-yellow min-h-screen">
-      <div className="max-w-7xl pt-7 rounded-t-3xl my-0 mx-auto pb-0">
+      <div className="max-w-7xl pt-7 sm:px-8 rounded-t-3xl my-0 mx-auto pb-0">
         <div className="flex justify-between font-audiowide py-6 px-4 rounded-md border-black border items-center bg-white">
           <div className="flex">
-            <h1 className="text-2xl mr-4">{name}</h1>
+            <h1 className="text-2xl xs:text-xl mr-4">{name}</h1>
             <div
               className="flex items-center cursor-pointer"
               onClick={() => {
                 copy(`https://instadao.org/${name}`);
               }}
             >
-              <span className="p-2 rounded-l-lg bg-gray-100">
+              <span className="p-2 xs:hidden rounded-l-lg bg-gray-100">
                 instadao.org/{name}
               </span>
-              <div className="bg-gray-200 p-2 rounded-r-lg">
+              <div className="bg-gray-200 p-2 rounded-r-lg xs:rounded-l-lg">
                 <DuplicateIcon width={20} height={20} />
               </div>
             </div>
@@ -167,22 +168,26 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
             )}
           </div>
         </div>
-        <div className="grid grid-cols-2 font-audiowide gap-4 mt-4">
-          <div className="bg-white p-8 rounded-lg border border-black">
+        <div className="grid grid-cols-2 sm:grid-cols-1 font-audiowide gap-4 mt-4">
+          <div className="bg-white sm:order-1 p-8 rounded-lg border border-black">
             <p className="text-lg">Token Distribution</p>
             <hr className="mt-4 mb-4" />
-            <div>
-              <PieChart
-                width={500}
-                height={500}
-                data={[
-                  ...holdings,
-                  {
-                    address: "not yet minted",
-                    balance: remainingSupply,
-                  },
-                ]}
-              />
+            <div className="h-500px xs:h-96 max-h-500px">
+              <ParentSize>
+                {({ width, height }) => (
+                  <PieChart
+                    width={width}
+                    height={height}
+                    data={[
+                      ...holdings,
+                      {
+                        address: "not yet minted",
+                        balance: remainingSupply,
+                      },
+                    ]}
+                  />
+                )}
+              </ParentSize>
             </div>
           </div>
           <div className="bg-white rounded-lg p-8 border border-black">
