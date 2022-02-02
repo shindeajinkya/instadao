@@ -371,23 +371,6 @@ const Dashboard: React.FC = () => {
           </a>
         </div>
       </Modal>
-      <Modal open={false}>
-        <div className="flex flex-col items-center justify-center font-audiowide mx-6">
-          <Image src={ensMissingimage} />
-          <span className="text-base mt-4">
-            You do not have an ENS. To proceed, purchase an ENS.
-          </span>
-          <a
-            href="https://app.ens.domains/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center space-x-4 bg-black text-white px-12 py-2 mt-4 rounded-lg"
-          >
-            <span>Visit ENS Website</span>
-            <ArrowSmRightIcon width={24} height={24} />
-          </a>
-        </div>
-      </Modal>
     </div>
   );
 };
