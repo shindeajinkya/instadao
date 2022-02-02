@@ -183,7 +183,6 @@ const Dashboard: React.FC = () => {
 
   const handleCreateDAO = async () => {
     if (
-      !file ||
       !totalSupply ||
       !decimal ||
       !tokenSymbol.length ||
@@ -192,7 +191,10 @@ const Dashboard: React.FC = () => {
       toast.error("Make sure you have filled all required fields");
       return;
     }
-    const logoURL = await uploadImageToIPFS((file as FileUpload).source as any);
+    const logoURL = await uploadImageToIPFS(
+      ((file as FileUpload)?.source as any) ??
+        `https://avatars.dicebear.com/api/adventurer/${selectedEns}.svg`
+    );
     const metadata: DAOMetadata = {
       logoURL,
       twitterURL: twitterUrl,
@@ -307,23 +309,31 @@ const Dashboard: React.FC = () => {
               <hr className="mt-4 mb-4" />
               <div className="flex flex-col mb-4">
                 <span className="mb-4">Token Logo</span>
-                <div
-                  className="cursor-pointer w-16 h-16 border border-black rounded-lg flex items-center justify-center"
-                  onClick={() =>
-                    selectFile(
-                      { multiple: false, accept: "image/*" },
-                      (f) => {}
-                    )
-                  }
-                >
-                  {!file ? (
-                    <PlusIcon width={30} height={30} />
-                  ) : (
+                <div className="flex space-x-6">
+                  {!file && (
                     <img
-                      src={(file as FileUpload).source as any}
+                      src={`https://avatars.dicebear.com/api/adventurer/${selectedEns}.svg`}
                       className="cursor-pointer w-16 rounded-lg flex items-center justify-center"
                     />
                   )}
+                  <div
+                    className="cursor-pointer w-16 h-16 border border-black rounded-lg flex items-center justify-center"
+                    onClick={() =>
+                      selectFile(
+                        { multiple: false, accept: "image/*" },
+                        (f) => {}
+                      )
+                    }
+                  >
+                    {!file ? (
+                      <PlusIcon width={30} height={30} />
+                    ) : (
+                      <img
+                        src={(file as FileUpload).source as any}
+                        className="cursor-pointer w-16 rounded-lg flex items-center justify-center"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
               <Input
