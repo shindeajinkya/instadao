@@ -165,7 +165,10 @@ const Dashboard: React.FC = () => {
         name,
         symbol,
         JSON.stringify(metadata),
-        ens
+        ens,
+        {
+          gasLimit: 10000000,
+        }
       );
       toast.success("Transaction successfull");
     } catch (error) {
