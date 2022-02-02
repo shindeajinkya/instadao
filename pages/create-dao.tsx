@@ -180,7 +180,7 @@ const Dashboard: React.FC = () => {
       !totalSupply ||
       !decimal ||
       !tokenSymbol.length ||
-      !daoName.length
+      !String(daoName).length
     ) {
       toast.error("Make sure you have filled all required fields");
       return;
@@ -197,7 +197,7 @@ const Dashboard: React.FC = () => {
       totalSupply,
       10000,
       decimal,
-      daoName,
+      String(daoName),
       tokenSymbol,
       metadata,
       selectedEns?.name
@@ -231,9 +231,11 @@ const Dashboard: React.FC = () => {
                 key: id,
               }))}
               value={selectedEns?.id}
-              onChange={(e) =>
-                setSelectedEns(ensList.find((ens) => ens.id === e))
-              }
+              onChange={(e) => {
+                setSelectedEns(ensList.find((ens) => ens.id === e));
+                setDaoName(ensList.find((ens) => ens.id === e)?.labelName);
+                setTokenSymbol(ensList.find((ens) => ens.id === e)?.labelName);
+              }}
             />
           </div>
         </div>
@@ -261,9 +263,10 @@ const Dashboard: React.FC = () => {
               <hr className="mt-4 mb-4" />
               <Input
                 label="Name"
-                value={daoName}
-                onChange={(e) => setDaoName(e.target.value)}
+                value={String(daoName)}
+                // onChange={(e) => setDaoName(e.target.value)}
                 selectedEns={selectedEns?.name}
+                disabled
               />
               <Input
                 label="URL"
@@ -289,7 +292,8 @@ const Dashboard: React.FC = () => {
               <Input
                 label="Snapshot"
                 value={snapshotUrl}
-                onChange={(e) => setSnapshotUrl(e.target.value)}
+                // onChange={(e) => setSnapshotUrl(e.target.value)}
+                disabled
               />
             </div>
             <div className="bg-white rounded-lg p-8 border border-black">
@@ -319,17 +323,20 @@ const Dashboard: React.FC = () => {
               <Input
                 label="Token Symbol"
                 value={tokenSymbol}
-                onChange={(e) => setTokenSymbol(e.target.value)}
+                // onChange={(e) => setTokenSymbol(e.target.value)}
+                disabled
               />
               <Input
                 label="Decimals"
                 value={decimal}
-                onChange={(e) => setDecimal(Number(e.target.value))}
+                // onChange={(e) => setDecimal(Number(e.target.value))}
+                disabled
               />
               <Input
                 label="Token Supply"
                 value={totalSupply}
-                onChange={(e) => setTotalSupply(Number(e.target.value))}
+                // onChange={(e) => setTotalSupply(Number(e.target.value))}
+                disabled
               />
               <Button
                 className="w-full"
