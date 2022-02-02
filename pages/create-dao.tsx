@@ -328,8 +328,9 @@ const Dashboard: React.FC = () => {
               </div>
               <Input
                 label="Token Symbol"
-                value={tokenSymbol}
-                onChange={(e) => setTokenSymbol(e.target.value)}
+                value={`$${tokenSymbol}`}
+                // onChange={(e) => setTokenSymbol(e.target.value)}
+                disabled
               />
               <Input
                 label="Decimals"
