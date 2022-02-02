@@ -20,8 +20,10 @@ import {
   uploadImageToIPFS,
 } from "../utils/crypto";
 import availableDAOimage from "../assets/available.png";
+import ensMissingimage from "../assets/ensMissing.png";
 import Image from "next/image";
 import { GetServerSideProps } from "next";
+import Modal from "../components/Modal";
 
 // import { createGroup } from "../utils/moralis-db";
 
@@ -112,12 +114,14 @@ const Dashboard: React.FC = () => {
   const [decimal, setDecimal] = useState(18);
   const [totalSupply, setTotalSupply] = useState(1000000);
   const [availableDAO, setAvailableDAO] = useState("");
+  const [ensMissing, setEnsMissing] = useState(false);
 
   const fetchLinkedENS = async () => {
     if (!selfAddress) return;
     const ensLinked = await getAllEnsLinked(selfAddress);
     setEnsList(ensLinked.data.domains);
     setSelectedEns(ensLinked.data.domains[0]);
+    setEnsMissing(!ensLinked.data.domains?.length);
   };
 
   const fetchDAOForENS = async () => {
@@ -350,6 +354,40 @@ const Dashboard: React.FC = () => {
           </div>
         )}
       </div>
+      <Modal open={ensMissing}>
+        <div className="flex flex-col items-center justify-center font-audiowide mx-6">
+          <Image src={ensMissingimage} />
+          <span className="text-base mt-4">
+            You do not have an ENS. To proceed, purchase an ENS.
+          </span>
+          <a
+            href="https://app.ens.domains/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center space-x-4 bg-black text-white px-12 py-2 mt-4 rounded-lg"
+          >
+            <span>Visit ENS Website</span>
+            <ArrowSmRightIcon width={24} height={24} />
+          </a>
+        </div>
+      </Modal>
+      <Modal open={false}>
+        <div className="flex flex-col items-center justify-center font-audiowide mx-6">
+          <Image src={ensMissingimage} />
+          <span className="text-base mt-4">
+            You do not have an ENS. To proceed, purchase an ENS.
+          </span>
+          <a
+            href="https://app.ens.domains/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center space-x-4 bg-black text-white px-12 py-2 mt-4 rounded-lg"
+          >
+            <span>Visit ENS Website</span>
+            <ArrowSmRightIcon width={24} height={24} />
+          </a>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -69,8 +69,6 @@ const Dashboard: React.FC = () => {
       // await firebaseClient.default
       // 	.auth()
       // 	.signInWithCustomToken(token.data.token);
-
-      router.push("/create-dao");
     } catch (error) {
       console.error(error);
       toast.error(error.message);
