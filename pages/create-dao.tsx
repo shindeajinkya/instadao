@@ -237,7 +237,7 @@ const Dashboard: React.FC = () => {
               onChange={(e) => {
                 setSelectedEns(ensList.find((ens) => ens.id === e));
                 setDaoName(ensList.find((ens) => ens.id === e)?.labelName);
-                setTokenSymbol(ensList.find((ens) => ens.id === e)?.labelName);
+                // setTokenSymbol(ensList.find((ens) => ens.id === e)?.labelName);
               }}
             />
           </div>
@@ -295,8 +295,7 @@ const Dashboard: React.FC = () => {
               <Input
                 label="Snapshot"
                 value={snapshotUrl}
-                // onChange={(e) => setSnapshotUrl(e.target.value)}
-                disabled
+                onChange={(e) => setSnapshotUrl(e.target.value)}
               />
             </div>
             <div className="bg-white rounded-lg p-8 border border-black">
@@ -326,8 +325,7 @@ const Dashboard: React.FC = () => {
               <Input
                 label="Token Symbol"
                 value={tokenSymbol}
-                // onChange={(e) => setTokenSymbol(e.target.value)}
-                disabled
+                onChange={(e) => setTokenSymbol(e.target.value)}
               />
               <Input
                 label="Decimals"
