@@ -181,6 +181,8 @@ const Dashboard: React.FC = () => {
       );
 
       await res.wait();
+
+      router.push(`/${name}`);
     } catch (error) {
       console.error("Error creating DAO", error);
       toast.error("Error creating DAO");
@@ -267,7 +269,7 @@ const Dashboard: React.FC = () => {
               href={`/${availableDAO}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-black text-white text-lg py-3 px-12 flex items-center space-x-8 mt-6"
+              className="bg-black text-white text-lg py-3 px-12 flex items-center space-x-8 mt-6 hover:text-black"
             >
               Open {availableDAO} DAO
               <ArrowSmRightIcon width={24} height={24} />
@@ -383,7 +385,7 @@ const Dashboard: React.FC = () => {
             href="https://app.ens.domains/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center space-x-4 bg-black text-white px-12 py-2 mt-4 rounded-lg"
+            className="flex items-center justify-center space-x-4 bg-black text-white px-12 py-2 mt-4 rounded-lg hover:text-black"
           >
             <span>Visit ENS Website</span>
             <ArrowSmRightIcon width={24} height={24} />

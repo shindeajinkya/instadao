@@ -156,6 +156,16 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
 
   const links = getLinks();
 
+  const percentage =
+    (formatBalance(balanceMapping[selfAddress], Number(decimals)) /
+      Number(totalSupply)) *
+    100;
+
+  const walletHolding = formatBalance(
+    balanceMapping[selfAddress],
+    Number(decimals)
+  );
+
   return (
     <div className="bg-light-yellow min-h-screen">
       <div className="max-w-7xl pt-7 sm:px-8 rounded-t-3xl my-0 mx-auto pb-0">
@@ -223,7 +233,7 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
             <div className="flex justify-between">
               <p className="text-lg">Volume</p>
               {/* <p>Ξ11,613 ($29,407,127)</p> */}
-              <p>Add Token on Uniswap</p>
+              <p>Not Available</p>
             </div>
             <hr className="mt-4 mb-4" />
             <div className="flex justify-between">
@@ -234,7 +244,7 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
             <div className="flex justify-between">
               <p className="text-lg">Token Price</p>
               {/* <p>0.005 Ξ ($29)</p> */}
-              <p>Add Token on Uniswap</p>
+              <p>Not Available</p>
             </div>
             <a
               href={`
@@ -250,22 +260,12 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
               <div className="border border-black bg-gray-100 mt-3 py-3 px-4 rounded-md">
                 <div className="flex justify-between items-center">
                   <p className="text-lg">Your balance</p>
-                  <p>{`${formatBalance(
-                    balanceMapping[selfAddress],
-                    Number(decimals)
-                  )} ${symbol}`}</p>
+                  <p>{`${walletHolding ? walletHolding : 0} ${symbol}`}</p>
                 </div>
                 <hr className="mt-2 mb-2" />
                 <div className="flex justify-between items-center">
                   <p className="text-lg">Your Own</p>
-                  <p>{`${
-                    (formatBalance(
-                      balanceMapping[selfAddress],
-                      Number(decimals)
-                    ) /
-                      Number(totalSupply)) *
-                    100
-                  } %`}</p>
+                  <p>{`${percentage ? percentage : 0} %`}</p>
                 </div>
               </div>
             )}
