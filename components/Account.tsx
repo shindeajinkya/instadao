@@ -56,6 +56,11 @@ function Account() {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
+
   if (loading) {
     return (
       <div className=" bg-gray-200 rounded-lg px-2 py-3 w-48 flex justify-center">
@@ -98,7 +103,7 @@ function Account() {
                 <Menu.Item>
                   {({ active }) => (
                     <button
-                      onClick={logout}
+                      onClick={handleLogout}
                       type="submit"
                       className={`${
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700"

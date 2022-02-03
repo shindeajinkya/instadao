@@ -165,8 +165,9 @@ const Dashboard: React.FC = () => {
     metadata: DAOMetadata,
     ens: string
   ) => {
+    setLoading(true);
     try {
-      await contract().create(
+      const res = await contract().create(
         supply,
         amt,
         deci,
@@ -178,10 +179,13 @@ const Dashboard: React.FC = () => {
           gasLimit: 10000000,
         }
       );
-      toast.success("Transaction successfull");
+
+      await res.wait();
     } catch (error) {
       console.error("Error creating DAO", error);
       toast.error("Error creating DAO");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -203,7 +207,7 @@ const Dashboard: React.FC = () => {
       snapshotURL: snapshotUrl,
       websiteURL: url,
     };
-    createDAO(
+    await createDAO(
       totalSupply,
       10000,
       decimal,
