@@ -24,6 +24,9 @@ import ensMissingimage from "../assets/ensMissing.png";
 import Image from "next/image";
 import { GetServerSideProps } from "next";
 import Modal from "../components/Modal";
+import * as blockies from "blockies-ts";
+import { ethers } from "ethers";
+import { sha256 } from "ethers/lib/utils";
 
 // import { createGroup } from "../utils/moralis-db";
 
@@ -115,6 +118,7 @@ const Dashboard: React.FC = () => {
   const [totalSupply, setTotalSupply] = useState(1000000);
   const [availableDAO, setAvailableDAO] = useState("");
   const [ensMissing, setEnsMissing] = useState(false);
+  const [blockieSrc, setBlockieSrc] = useState("");
 
   const fetchLinkedENS = async () => {
     if (!selfAddress) return;
@@ -191,10 +195,7 @@ const Dashboard: React.FC = () => {
       toast.error("Make sure you have filled all required fields");
       return;
     }
-    const logoURL = await uploadImageToIPFS(
-      ((file as FileUpload)?.source as any) ??
-        `https://avatars.dicebear.com/api/adventurer/${selectedEns}.svg`
-    );
+    const logoURL = await uploadImageToIPFS(blockieSrc);
     const metadata: DAOMetadata = {
       logoURL,
       twitterURL: twitterUrl,
@@ -224,6 +225,9 @@ const Dashboard: React.FC = () => {
       getAllURLsLinkedWithENS();
       fetchDAOForENS();
       setDaoName(selectedEns.labelName);
+      setTokenSymbol(selectedEns.labelName);
+      const imgSrc = blockies.create({ seed: selectedEns.name }).toDataURL();
+      setBlockieSrc(imgSrc);
     }
   }, [selectedEns]);
 
@@ -310,30 +314,30 @@ const Dashboard: React.FC = () => {
               <div className="flex flex-col mb-4">
                 <span className="mb-4">Token Logo</span>
                 <div className="flex space-x-6">
-                  {!file && (
-                    <img
-                      src={`https://avatars.dicebear.com/api/adventurer/${selectedEns}.svg`}
-                      className="cursor-pointer w-16 rounded-lg flex items-center justify-center"
-                    />
+                  <img
+                    src={blockieSrc}
+                    className="cursor-pointer w-16 rounded-lg flex items-center justify-center"
+                  />
+                  {false && (
+                    <div
+                      className="cursor-pointer w-16 h-16 border border-black rounded-lg flex items-center justify-center"
+                      onClick={() =>
+                        selectFile(
+                          { multiple: false, accept: "image/*" },
+                          (f) => {}
+                        )
+                      }
+                    >
+                      {!file ? (
+                        <PlusIcon width={30} height={30} />
+                      ) : (
+                        <img
+                          src={(file as FileUpload).source as any}
+                          className="cursor-pointer w-16 rounded-lg flex items-center justify-center"
+                        />
+                      )}
+                    </div>
                   )}
-                  <div
-                    className="cursor-pointer w-16 h-16 border border-black rounded-lg flex items-center justify-center"
-                    onClick={() =>
-                      selectFile(
-                        { multiple: false, accept: "image/*" },
-                        (f) => {}
-                      )
-                    }
-                  >
-                    {!file ? (
-                      <PlusIcon width={30} height={30} />
-                    ) : (
-                      <img
-                        src={(file as FileUpload).source as any}
-                        className="cursor-pointer w-16 rounded-lg flex items-center justify-center"
-                      />
-                    )}
-                  </div>
                 </div>
               </div>
               <Input
