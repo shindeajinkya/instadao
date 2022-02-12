@@ -13,6 +13,8 @@ import PieChart from "../components/PieChart";
 import { getEllipsisTxt } from "../helpers/formatters";
 import { useMoralisData } from "../hooks/useMoralisData";
 import {
+  contract,
+  daoContract,
   getAllEnsLinked,
   getDAODetails,
   getTokenTransferDetails,
@@ -77,6 +79,8 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
   const [remainingSupply, setRemainingSupply] = useState(0);
   const [loading, setLoading] = useState(false);
   const [holdings, setHoldings] = useState([]);
+
+  const [addressInput, setAddressInput] = useState<string>("")
 
   const fetchTokenTransferDetails = async () => {
     const tokenTransferDetails = await getTokenTransferDetails(tokenaddress);
@@ -165,6 +169,28 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
     balanceMapping[selfAddress],
     Number(decimals)
   );
+
+  const mint99Percent = async () => {
+    try {
+
+
+      // if (Number(totalSupply) !== 1000000) {
+      //   toast.error("99% is already minted");
+      //   return 
+      // }
+      
+      // @anoushk
+      setLoading(true);
+      const tx = await daoContract(tokenaddress).mint(address, Number(totalSupply) - 10000);
+      await tx.wait();
+      setAddress("");
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="bg-light-yellow min-h-screen">
@@ -256,6 +282,15 @@ const DAODetail: React.FC<DaoDetailsProps> = ({ daoData }) => {
             >
               Buy tokens <ArrowSmRightIcon width={24} height={24} />
             </a>
+            <div className="my-4 space-y-4">
+            <Input
+                label="Address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="0x..."
+              />
+              <Button loading={loading} onClick={mint99Percent}>Mint 99%</Button>
+            </div>
             {isAuthenticated && (
               <div className="border border-black bg-gray-100 mt-3 py-3 px-4 rounded-md">
                 <div className="flex justify-between items-center">
