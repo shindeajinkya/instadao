@@ -2,7 +2,7 @@ import axios from "axios";
 import { ethers } from "ethers";
 import { create, urlSource } from "ipfs-http-client";
 import DaoFactory from "../contract/DaoFactory.json";
-import InstaDao from "../contract/InstaDao.json";
+import InstaDao from "../contract/InstaDAO.json";
 
 declare let window: any;
 
@@ -269,11 +269,7 @@ export const daoContract = (address: string) => {
   if (ethereum) {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const contractReader = new ethers.Contract(
-      address,
-      InstaDao,
-      signer
-    );
+    const contractReader = new ethers.Contract(address, InstaDao, signer);
     return contractReader;
   }
 
