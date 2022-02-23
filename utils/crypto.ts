@@ -6,6 +6,14 @@ import InstaDao from "../contract/InstaDAO.json";
 
 declare let window: any;
 
+const config = process.env.NEXT_PUBLIC_ENV === "testnet" ? {
+  contractAddress: "0x7ca28EfFf78f9edEc4E8c87F9C50B03d4F00Ff3d",
+  graphURL: "https://api.thegraph.com/subgraphs/name/anoushk1234/insta-dao"
+} : {
+  contractAddress: "0x6cfa18a6e2A4Dc5e6d00e9037ab545eA60c12Ff8",
+  graphURL: "https://api.thegraph.com/subgraphs/name/anoushk1234/instadao-mainnet"
+}
+
 export const getSignedNonce = async (nonce: string) => {
   const { ethereum } = window;
 
@@ -254,7 +262,7 @@ export const contract = () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const contractReader = new ethers.Contract(
-      "0x6cfa18a6e2A4Dc5e6d00e9037ab545eA60c12Ff8",
+      config.contractAddress,
       DaoFactory,
       signer
     );
@@ -291,7 +299,7 @@ export const getDAOForENS = async (name: string) => {
     "content-type": "application/json",
   };
   const ensGraphURL =
-    "https://api.thegraph.com/subgraphs/name/anoushk1234/instadao-mainnet";
+    config.graphURL;
   const graphqlQuery = {
     operationName: "getDAO",
     // variables: {},

@@ -2,7 +2,9 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev -p 3001",
-		"build": "next build",
+		"dev:testnet": "NEXT_PUBLIC_ENV=testnet next dev -p 3001",
+		"build": "NODE_ENV=production NEXT_PUBLIC_ENV=mainnet next build",
+		"build:testnet": "NODE_ENV=production NEXT_PUBLIC_ENV=testnet next build",
 		"start": "next start"
 	},
 	"dependencies": {
