@@ -254,7 +254,7 @@ export const contract = () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const contractReader = new ethers.Contract(
-      "0x7ca28EfFf78f9edEc4E8c87F9C50B03d4F00Ff3d",
+      "0x6cfa18a6e2A4Dc5e6d00e9037ab545eA60c12Ff8",
       DaoFactory,
       signer
     );
@@ -291,7 +291,7 @@ export const getDAOForENS = async (name: string) => {
     "content-type": "application/json",
   };
   const ensGraphURL =
-    "https://api.thegraph.com/subgraphs/name/anoushk1234/insta-dao";
+    "https://api.thegraph.com/subgraphs/name/anoushk1234/instadao-mainnet";
   const graphqlQuery = {
     operationName: "getDAO",
     // variables: {},
