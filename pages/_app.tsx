@@ -92,6 +92,43 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
       )}
 
       <Component {...pageProps} />
+      <footer className="h-12 font-audiowide flex items-center justify-center space-x-12 fixed inset-x-0 bottom-0 bg-white w-full">
+        <a 
+          href="" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-black"
+        >
+          Tech Doc
+        </a>
+        <div className="w-3 h-3 bg-gray-200 rounded-full" />
+        <a 
+          href="https://github.com/shindeajinkya/instadao" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-black"
+        >
+          Github Repo
+        </a>
+        <div className="w-3 h-3 bg-gray-200 rounded-full" />
+        <a 
+          href="https://etherscan.io/address/0x6cfa18a6e2a4dc5e6d00e9037ab545ea60c12ff8" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-black"
+        >
+          Smart Contract
+        </a>
+        <div className="w-3 h-3 bg-gray-200 rounded-full" />
+        <a 
+          href="https://mirror.xyz/madhavanmalolan.eth/OMGH_SQ9E97r2-iXzY2ndQQgOuTUXdVaM-VBoiT0mIg" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-black"
+        >
+          Bounty Doc
+        </a>
+      </footer>
       <ToastContainer />
       <ReactTooltip effect="solid" />
     </MoralisProvider>
