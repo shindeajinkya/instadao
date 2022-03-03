@@ -174,10 +174,7 @@ const Dashboard: React.FC = () => {
         name,
         symbol,
         JSON.stringify(metadata),
-        ens,
-        {
-          gasLimit: 10000000,
-        }
+        ens
       );
 
       await res.wait();
