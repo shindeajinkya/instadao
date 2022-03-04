@@ -92,14 +92,14 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
       )}
 
       <Component {...pageProps} />
-      <footer className="h-12 font-audiowide flex items-center justify-center space-x-12 fixed inset-x-0 bottom-0 bg-white w-full">
+      <footer className="h-12 xs:h-auto font-audiowide xs:flex-col xs:space-y-6 xs:space-x-0 flex items-center justify-center space-x-12 xs:relative xs:py-2 fixed inset-x-0 bottom-0 bg-white w-full">
         <a 
-          href="" 
+          href="https://instadao-testnet.vercel.app/" 
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-black"
         >
-          Tech Doc
+          Testnet Link
         </a>
         <div className="w-3 h-3 bg-gray-200 rounded-full" />
         <a 
